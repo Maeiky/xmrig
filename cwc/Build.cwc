@@ -84,6 +84,12 @@
 		-o {pObj}hw/
 	-{vIncl} -{vFlag}
 >
+;Build net
+-c {pSrc}net/ 
+	;!{pSrc}hw/dmi/DmiReader_mac.cpp
+		-o {pObj}net/
+	-{vIncl} -{vFlag}
+
 ;Generate executable
 ;-o obj/{sOut}/ -#To _out/{sOut}/App.*
 >
