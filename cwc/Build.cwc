@@ -1,9 +1,11 @@
 -{vFlag}=
+-DUNICODE
 -D__STDC_FORMAT_MACROS
 -DXMRIG_MINER_PROJECT
 -DXMRIG_FEATURE_BENCHMARK
 -DXMRIG_ALGO_RANDOMX
 -DXMRIG_FEATURE_API
+-DXMRIG_FEATURE_ASM
 -march=ivybridge
 -DSIGPIPE=13
 ;-DWITH_CN_LITE=OFF
@@ -63,7 +65,25 @@
 		
 	-{vIncl} -{vFlag}
 >
+;Build Core
+-c {pSrc}core/ -o {pObj}core/
+	-{vIncl} -{vFlag}
+>
+;Build Crypto
+-c {pSrc}crypto/randomx/ 
+	!{pSrc}crypto/randomx/jit_compiler_a64.cpp
 
+		-o {pObj}crypto/randomx/
+	-{vIncl} -{vFlag}
+>
+;Build hw
+-c {pSrc}hw/ 
+	!{pSrc}hw/dmi/DmiReader_mac.cpp
+	!{pSrc}hw/dmi/DmiReader_unix.cpp
+	!{pSrc}hw/msr/Msr_linux.cpp
+		-o {pObj}hw/
+	-{vIncl} -{vFlag}
+>
 ;Generate executable
 ;-o obj/{sOut}/ -#To _out/{sOut}/App.*
 >
