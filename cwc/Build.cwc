@@ -1,5 +1,5 @@
 -{vFlag}=
--DUNICODE
+;-DUNICODE
 -D__STDC_FORMAT_MACROS
 -DXMRIG_MINER_PROJECT
 -DXMRIG_FEATURE_BENCHMARK
@@ -89,8 +89,14 @@
 	;!{pSrc}hw/dmi/DmiReader_mac.cpp
 		-o {pObj}net/
 	-{vIncl} -{vFlag}
-
-;Generate executable
-;-o obj/{sOut}/ -#To _out/{sOut}/App.*
 >
-;-#Run
+;Build main
+-c &{pSrc}
+	!{pSrc}App_unix.cpp
+		-o {pObj}
+	-{vIncl} -{vFlag}
+>
+;Generate executable
+-o {pObj} -#To _out/{sOut}/App.*
+>
+-#Run
