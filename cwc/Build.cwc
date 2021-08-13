@@ -1,0 +1,70 @@
+-{vFlag}=
+-D__STDC_FORMAT_MACROS
+-DXMRIG_MINER_PROJECT
+-DXMRIG_FEATURE_BENCHMARK
+-DXMRIG_ALGO_RANDOMX
+-DXMRIG_FEATURE_API
+-march=ivybridge
+-DSIGPIPE=13
+;-DWITH_CN_LITE=OFF
+;-DWITH_CN_HEAVY=OFF
+;-DWITH_CN_PICO=OFF
+;-DWITH_RANDOMX=ON
+;-DWITH_ARGON2=OFF
+;-DWITH_HWLOC=OFF
+;-DWITH_LIBCPUID=OFF
+;-DWITH_HTTP=OFF
+;-DWITH_TLS=OFF
+;-DWITH_ASM=OFF
+;-DWITH_EMBEDDED_CONFIG=ON
+;-DWITH_OPENCL=OFF
+;-DWITH_CUDA=OFF
+;-DWITH_SSE4_1=ON
+;-DWITH_DEBUG_LOG=ON
+;-DHWLOC_DEBUG=ON
+;-DCMAKE_BUILD_TYPE=Debug
+
+;-DXMRIG_DEPS=path
+;-DARM_TARGET=number
+;-DUV_INCLUDE_DIR=path
+;-DUV_LIBRARY=path
+;-DHWLOC_INCLUDE_DIR=path
+;-DHWLOC_LIBRARY=path
+;-DOPENSSL_ROOT_DIR=path
+>
+-{pSrc}=../src/
+>
+-{sOut}={_sPlatform}_{_sConfig_Type}_{_sOpt}
+-{pObj}=obj/{sOut}/
+-{pDeps}=../xmrig-deps/gcc/x64/
+-{p3P}=../3rdparty/
+>
+-{vIncl}=
+	-I ../
+	-I {pSrc}
+	-I {pDeps}include/
+	-I {p3P}
+	;-I {pSrc}base/io/log/backends/
+>
+;Build Backend
+-c {pSrc}backend/common/ -o {pObj}backend/common/
+	-{vIncl} -{vFlag}
+>
+-c {pSrc}backend/cpu/ -o {pObj}backend/cpu/
+	-{vIncl} -{vFlag}
+>
+;Build Base
+-c {pSrc}base/ 
+	!{pSrc}base/io/log/backends/SysLog.cpp
+	!{pSrc}base/kernel/Platform_mac.cpp
+	!{pSrc}base/kernel/Platform_unix.cpp
+
+		-o {pObj}base/
+		
+	-{vIncl} -{vFlag}
+>
+
+;Generate executable
+;-o obj/{sOut}/ -#To _out/{sOut}/App.*
+>
+;-#Run
