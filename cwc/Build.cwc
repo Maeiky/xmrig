@@ -84,9 +84,10 @@
 -c {pSrc}crypto/common/ 
 	!{pSrc}crypto/common/VirtualMemory_unix.cpp
 	!{pSrc}crypto/common/VirtualMemory_hwloc.cpp
-	
+		
 		-o {pObj}crypto/common/
 	-{vIncl} -{vFlag}
+	-O2
 |
 -c {pSrc}crypto/randomx/ 
 	!{pSrc}crypto/randomx/jit_compiler_a64.cpp
@@ -94,17 +95,20 @@
 	
 		-o {pObj}crypto/randomx/
 	-{vIncl} -{vFlag}
+	-O2
 |
 -c {pSrc}crypto/rx/ 
 	!{pSrc}crypto/rx/RxFix_linux.cpp
 	
 		-o {pObj}crypto/rx/
 	-{vIncl} -{vFlag}
+	-O2
 |
 -c {pSrc}crypto/cn/
 		-o {pObj}crypto/cn/
 	-DHAVE_ROTR
 	-{vIncl} -{vFlag}
+	-O2
 >
     ;src/crypto/cn/c_blake256.c
     ;src/crypto/cn/c_groestl.c
