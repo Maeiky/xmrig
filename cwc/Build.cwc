@@ -1,5 +1,6 @@
 -{vFlag}=
 -DUNICODE
+-DFMT_HEADER_ONLY
 -D__STDC_FORMAT_MACROS
 -DXMRIG_MINER_PROJECT
 -DXMRIG_FEATURE_BENCHMARK
@@ -83,20 +84,36 @@
 	
 		-o {pObj}crypto/common/
 	-{vIncl} -{vFlag}
->
+|
 -c {pSrc}crypto/randomx/ 
 	!{pSrc}crypto/randomx/jit_compiler_a64.cpp
 	!{pSrc}crypto/randomx/jit_compiler_fallback.cpp
 	
 		-o {pObj}crypto/randomx/
 	-{vIncl} -{vFlag}
->
+|
 -c {pSrc}crypto/rx/ 
 	!{pSrc}crypto/rx/RxFix_linux.cpp
 	
 		-o {pObj}crypto/rx/
 	-{vIncl} -{vFlag}
+|
+-c {pSrc}crypto/cn/
+		-o {pObj}crypto/cn/
+	-DHAVE_ROTR
+	-{vIncl} -{vFlag}
 >
+    ;src/crypto/cn/c_blake256.c
+    ;src/crypto/cn/c_groestl.c
+    ;src/crypto/cn/c_jh.c
+    ;src/crypto/cn/c_skein.c
+    ;src/crypto/cn/CnCtx.cpp
+    ;src/crypto/cn/CnHash.cpp
+    ;src/crypto/common/HugePagesInfo.cpp
+    ;src/crypto/common/MemoryPool.cpp
+    ;src/crypto/common/Nonce.cpp
+    ;src/crypto/common/VirtualMemory.cpp
+
 ;Build hw
 -c {pSrc}hw/ 
 	!{pSrc}hw/dmi/DmiReader_mac.cpp
@@ -127,6 +144,10 @@
 >
 ;Assembly
 gcc -c -m64 {pSrc}crypto/randomx/jit_compiler_x86_static.S -o {pObj}jit_compiler_x86_static_S.o
+>
+gcc -c -m64 {pSrc}crypto/cn/asm/win64/cn_main_loop.S -o {pObj}cn_main_loop.o.
+>
+gcc -c -m64 {pSrc}crypto/cn/asm/CryptonightR_template.S -o {pObj}CryptonightR_template.o
 >
 ;Build main
 -c &{pSrc}
