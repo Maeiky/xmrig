@@ -1,11 +1,12 @@
 -{vFlag}=
-;-DUNICODE
+-DUNICODE
 -D__STDC_FORMAT_MACROS
 -DXMRIG_MINER_PROJECT
 -DXMRIG_FEATURE_BENCHMARK
 -DXMRIG_ALGO_RANDOMX
 -DXMRIG_FEATURE_API
 -DXMRIG_FEATURE_ASM
+-DXMRIG_FEATURE_MSR
 -march=ivybridge
 -DSIGPIPE=13
 ;-DWITH_CN_LITE=OFF
@@ -52,17 +53,23 @@
 -c {pSrc}backend/common/ -o {pObj}backend/common/
 	-{vIncl} -{vFlag}
 >
--c {pSrc}backend/cpu/ -o {pObj}backend/cpu/
+-c {pSrc}backend/cpu/ 
+	!{pSrc}backend/cpu/platform/BasicCpuInfo_arm.cpp
+	!{pSrc}backend/cpu/platform/lscpu_arm.cpp
+	
+		-o {pObj}backend/cpu/
 	-{vIncl} -{vFlag}
 >
 ;Build Base
 -c {pSrc}base/ 
 	!{pSrc}base/io/log/backends/SysLog.cpp
+	!{pSrc}base/io/json/Json_unix.cpp
 	!{pSrc}base/kernel/Platform_mac.cpp
 	!{pSrc}base/kernel/Platform_unix.cpp
+	!{pSrc}base/kernel/Process_unix.cpp
+	!{pSrc}base/kernel/Platform_hwloc.cpp
 
 		-o {pObj}base/
-		
 	-{vIncl} -{vFlag}
 >
 ;Build Core
@@ -70,10 +77,24 @@
 	-{vIncl} -{vFlag}
 >
 ;Build Crypto
+-c {pSrc}crypto/common/ 
+	!{pSrc}crypto/common/VirtualMemory_unix.cpp
+	!{pSrc}crypto/common/VirtualMemory_hwloc.cpp
+	
+		-o {pObj}crypto/common/
+	-{vIncl} -{vFlag}
+>
 -c {pSrc}crypto/randomx/ 
 	!{pSrc}crypto/randomx/jit_compiler_a64.cpp
-
+	!{pSrc}crypto/randomx/jit_compiler_fallback.cpp
+	
 		-o {pObj}crypto/randomx/
+	-{vIncl} -{vFlag}
+>
+-c {pSrc}crypto/rx/ 
+	!{pSrc}crypto/rx/RxFix_linux.cpp
+	
+		-o {pObj}crypto/rx/
 	-{vIncl} -{vFlag}
 >
 ;Build hw
@@ -93,10 +114,16 @@
 ;Build main
 -c &{pSrc}
 	!{pSrc}App_unix.cpp
+	
 		-o {pObj}
 	-{vIncl} -{vFlag}
 >
 ;Generate executable
 -o {pObj} -#To _out/{sOut}/App.*
+	-L {pDeps}/lib/
+	-luv
+	-lssl
+	-lhwloc
+	-lcrypto
 >
 -#Run
