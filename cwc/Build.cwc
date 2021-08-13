@@ -107,9 +107,26 @@
 >
 ;Build net
 -c {pSrc}net/ 
-	;!{pSrc}hw/dmi/DmiReader_mac.cpp
 		-o {pObj}net/
 	-{vIncl} -{vFlag}
+>
+;Build 3Party
+-c {pSrc}3rdparty/llhttp/
+		-o {pObj}3rdparty/llhttp/
+	-{vIncl} -{vFlag}
+|
+-c {pSrc}3rdparty/argon2/lib/
+		-o {pObj}3rdparty/argon2/lib/
+		-I {pSrc}3rdparty/argon2/lib/
+	-{vIncl} -{vFlag}
+|
+-c {pSrc}3rdparty/argon2/arch/x86_64/lib/
+		-o {pObj}3rdparty/argon2/arch/lib/
+		-I {pSrc}3rdparty/argon2/lib/
+	-{vIncl} -{vFlag}
+>
+;Assembly
+gcc -c -m64 {pSrc}crypto/randomx/jit_compiler_x86_static.S -o {pObj}jit_compiler_x86_static_S.o
 >
 ;Build main
 -c &{pSrc}
@@ -125,5 +142,9 @@
 	-lssl
 	-lhwloc
 	-lcrypto
+	-lws2_32
+	-lCrypt32
+	-lUserenv
+	-lIphlpapi
 >
 -#Run
